@@ -1,0 +1,180 @@
+// IMPORTANT
+import g4p_controls.*;
+
+
+int numArmies;
+
+color red = color(225, 0, 0);
+color blue = color(0, 0, 255);
+color purple = color(225, 0, 255);
+color orange = color(205, 20, 0);
+float fadeFactor = 255;
+//Army redArmy = new Army(100, "r", red, 2.4);
+//Army blueArmy = new Army(100, "b", blue, 2.4);
+//Army purpleArmy = new Army(100, "p", purple, 2.4);
+//Army orangeArmy = new Army(100, "o", orange, 2.4);
+
+String army0n = "Blue";
+color army0c = blue;
+int army0ag = 2;
+
+String army1n = "Red";
+color army1c = red;
+int army1ag = 4;
+
+String army2n;
+color army2c;
+int army2ag;
+
+String army3n;
+color army3c;
+int army3ag;
+
+//Rank general = new Rank( "Foot Soldier", red, 3 );
+//Rank horseMen = new Rank( "Hoursemen", red, 2 );
+//Rank archer = new Rank( "Archer", red, 1 );
+//Rank footSoldier = new Rank( "Foot Soldier", red, 1 );
+
+
+// Added stuff
+ArrayList<Army> armies = new ArrayList<Army>();
+boolean winter = false;
+PImage snowBackground;
+PImage grassBackground;
+PImage demon;
+PImage santa;
+boolean demonSummoned = false;
+public boolean go = true;
+
+Army redArmy = new Army( army0n, army0c, army0ag );
+Army blueArmy = new Army( army1n, army1c, army1ag );
+Army purpleArmy = new Army( army2n, army2c, army2ag );
+Army orangeArmy = new Army( army3n, army3c, army3ag );
+  
+void setup () {
+
+  size(800, 800);
+  createGUI();
+  
+  armies.add(redArmy);
+  armies.add(blueArmy);
+ // armies.add(purpleArmy);
+ // armies.add(orangeArmy);
+  
+  //if ( numArmies == 2 ){
+  //  armies.remove(3);
+  //  armies.remove(2);
+  //}
+  
+  //else if ( numArmies == 3 ){
+  //  armies.remove(3);
+  //}
+  
+  for( int i = 0; i < armies.size(); i++ )
+    armies.get(i).addSoldiers();
+  
+  formation();
+  
+  
+  snowBackground = loadImage("snow.jpg");
+  grassBackground = loadImage("grass.jpg");
+  demon = loadImage("demon.jpg");
+  santa = loadImage("santa.png");
+}
+
+
+
+void draw() {
+  
+  weatherUpdate();
+  
+  
+  for( int j = 0; j < armies.size(); j++){
+    for( int i = 0; i < armies.get(j).soldiers.size(); i++ ){
+      Army a = armies.get(j);
+      Soldier s = a.soldiers.get(i);
+        s.drawSoldier();
+        if( s.alive == true ){
+        s.moveSoldier();
+        if( s.title == "archer"){
+          if(s.hasArrow == false ){
+           // s.checkForArrow();
+          }
+          else{
+           // s.arrow();
+          }
+        }
+        s.fight();
+      }
+        s.fade();
+        s.checkAlive( i );
+    }
+  }
+  
+  //if ( demonSummoned == true ) {
+    if ( winter == true ) {
+      image(santa, 0, 0, 800, 800);
+    }
+  //}
+  
+  
+}
+
+
+void weatherUpdate() {
+
+  if ( winter == true )
+    image(snowBackground, 0, 0);
+  else {
+    image(grassBackground, 0, 0);
+  }
+}
+
+void reportUpdate( Army army, String message ) {
+  if ( army.name == "r" ) {
+    redText.setText( message );
+  } else if ( army.name == "b" ) {
+    blueText.setText( message );
+  } else if ( army.name == "p" ) {
+    purpleText.setText( message );
+  } else {
+    orangeText.setText( message );
+  }
+}
+
+void formation(){
+  float b = 0.0;
+  float vex = TWO_PI/25.0;
+  float x = 200;
+  float y = 200;
+
+//for (int j = 450; j < 850; j+=30) {
+//  circle(j,750-sin(b)*160.0,20 );
+//  b = b + vex;
+  
+  for( int j = 0; j < armies.size(); j++){
+    for( int i = 0; i < armies.get(j).soldiers.size(); i++ ){
+      armies.get(j).soldiers.get(i).Location.x = x;
+      armies.get(j).soldiers.get(i).Location.y = y-sin(b)*160.0;
+      b = b + vex;
+      x += 30;
+    }
+    y = 500;
+    x = 200;
+  }
+  
+  //int padX = 300;
+  //int padY = 20;
+    
+  //for( int j = 0; j < armies.size(); j++){
+  //  for( int i = 0; i < armies.get(j).soldiers.size(); i++ ){
+  //    armies.get(j).soldiers.get(i).Location.x = padX;
+  //    armies.get(j).soldiers.get(i).Location.y = padY;
+  //    padX += 35;
+  //  }
+  //  padX -= 560;
+  //  padY += 700;
+  //}
+    
+}
+  
